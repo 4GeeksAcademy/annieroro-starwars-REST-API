@@ -56,23 +56,14 @@ def handle_users():
         return response_body, 200
 
 
-@app.route('/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/users/<int:user_id>', methods=['GET'])
 def handle_user(user_id):
     response_body = {}
-    print(id)
-    if request.method == 'GET':
-        response_body = {}
-        results = []
-        users = db.session.execute(db.select(Users).where(Users.id == user_id)).scalar()
-        response_body['results'] = users.serialize()
-        response_body['message'] = f'Recibiendo user {user_id}'
-        return response_body, 200
-    if request.method == 'PUT':
-        response_body['message'] = 'metodo PUT del users/<id>'
-        return response_body, 200
-    if request.method == 'DELETE':
-        response_body['message'] = 'metodo DELETE del users/<id>'
-        return response_body, 200
+    results = []
+    users = db.session.execute(db.select(Users).where(Users.id == user_id)).scalar()
+    response_body['results'] = users.serialize()
+    response_body['message'] = f'Recibiendo user {user_id}'
+    return response_body, 200
 
 
 @app.route('/users/<int:user_id>/favorites', methods=['GET'])
@@ -87,6 +78,7 @@ def handle_favorites(user_id):
     response_body['message'] = 'Data retrieved successfully!'
     return response_body, 200
 
+
 @app.route('/characters', methods=['GET'])
 def handle_characters():
     response_body = {}
@@ -95,6 +87,7 @@ def handle_characters():
     response_body['results'] = [row.serialize() for row in character]
     response_body['message'] = 'Metodo GET characters OK!'
     return response_body, 200
+
 
 @app.route('/characters/<int:id_character>', methods=['GET'])
 def handle_character_id(id_character):
@@ -118,6 +111,7 @@ def add_favorite_characters(user_id):
     response_body['message'] = f'Responde el POST {user_id}'
     
     return response_body
+
 
 @app.route('/planets', methods=['GET'])
 def handle_planets():
@@ -155,20 +149,20 @@ def add_favorite_planets(user_id):
 @app.route('/favorites/<int:user_id>/planets/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planets(user_id, planet_id):
     response_body = {}
-    planet = db.session.execute(db.select(FavoritePlanets).where(FavoritePlanets.user_id == id_user)).scalar()
+    planet = db.session.execute(db.select(FavoritePlanets).where(FavoritePlanets.user_id == user_id)).scalar()
     db.session.delete(planet)
     db.session.commit()
-    response_body['message'] = f'Planet {planet_id} added to favorites of {user_id}'
+    response_body['message'] = f'Planet {planet_id} deleted to favorites of {user_id}'
     return response_body, 200
 
 
 @app.route('/favorites/<int:user_id>/characters/<int:character_id>', methods=['DELETE'])
 def delete_favorite_character(user_id, character_id):
     response_body = {}
-    character = db.session.execute(db.select(FavoriteCharacters).where(FavoriteCharacters.user_id == id_user)).scalar()
+    character = db.session.execute(db.select(FavoriteCharacters).where(FavoriteCharacters.user_id == user_id)).scalar()
     db.session.delete(character)
     db.session.commit()
-    response_body['message'] = f'Character {character_id} added to favorites of {user_id}'
+    response_body['message'] = f'Character {character_id} deleted to favorites of {user_id}'
     return response_body, 200
 
     

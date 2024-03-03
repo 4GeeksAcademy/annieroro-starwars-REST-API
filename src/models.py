@@ -21,8 +21,7 @@ class Users(db.Model):
 
 class Planets(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-
+    name = db.Column(db.String(100))
 
     def __repr__(self):
         return f'<Planet: {self.id} - {self.name}>'
